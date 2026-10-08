@@ -1,5 +1,5 @@
 // Run with: node tests/test.js   (uses the same script.js as the website)
-const c = require("../script.js");
+const c = require("./script.js");
 let pass = 0, fail = 0;
 function check(name, cond, info) {
   if (cond) { pass++; console.log("PASS  " + name); }
