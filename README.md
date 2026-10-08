@@ -2,7 +2,7 @@
 
 A small website that calculates and verifies the **Internet Checksum** (the 16-bit one's complement checksum from [RFC 1071](https://www.rfc-editor.org/rfc/rfc1071)) and shows every step of the working. Built as a Data Communication and Networking (DCN) mini project with plain HTML, CSS and JavaScript. No frameworks, no backend, no database.
 
-![Home page](screenshots/)
+![Home page](home.png)
 
 ## What it does
 
@@ -13,8 +13,8 @@ A small website that calculates and verifies the **Internet Checksum** (the 16-b
 - Has a separate **Verify** section: if the words plus the checksum add up to `1111111111111111`, the checksum is valid
 - Checks the input and explains what is wrong (not 16 bits, not only 0 and 1)
 
-![Addition with end-around carry](screenshots/)
-![Final checksum](screenshots/)
+![Addition with end-around carry](working-addition.png)
+![Final checksum](working-checksum.png)
 
 ## How the checksum works
 
@@ -27,7 +27,7 @@ Example: `AAAA + CCCC + 0F0F` gives sum `8686`, so the checksum is `7979`. Addin
 
 | Valid | One bit changed |
 |---|---|
-| ![Valid](screenshots/) | ![Invalid](screenshots/verify-invalid.png) |
+| ![Valid](verify-valid.png) | ![Invalid](verify-invalid.png) |
 
 ## How to run it
 
@@ -38,7 +38,7 @@ Internet-Checksum-Calculator/
 ├── index.html
 ├── style.css
 ├── script.js
-└── tests/test.js
+└── test.js
 ```
 
 ## Tests
@@ -46,7 +46,7 @@ Internet-Checksum-Calculator/
 The checksum logic in `script.js` can be tested with Node (no packages needed):
 
 ```
-node tests/test.js
+node test.js
 ```
 
 The tests cover one word, many words, end-around carry, wrong input, verification, text input, and 20,000 random inputs compared against a separate calculation.
