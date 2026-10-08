@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Internet Checksum Calculator - DCN Mini Project</title>
+  <meta name="description" content="Calculate and verify the Internet Checksum (RFC 1071) step by step.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <nav class="topbar">
+    <div class="wrap topbar-inner">
+      <span class="tag">DCN mini project</span>
+      <div class="links">
+        <a href="#calculate">Calculate</a>
+        <a href="#letters">Letters to bits</a>
+        <a href="#verify">Verify</a>
+        <a href="#learn">Learn</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="wrap">
+      <h1>Internet Checksum Calculator</h1>
+      <p class="lead">
+        Add 16-bit words, wrap the carry around, flip the bits. This is how IP, TCP and UDP
+        check that data arrived intact, shown one step at a time.
+      </p>
+
+      <button type="button" class="strip" id="heroStrip" aria-label="Flip the bits of the example word">
+        <span class="bits lg" id="heroBits" role="img" aria-label="1010101010101010"></span>
+      </button>
+      <p class="strip-caption" id="heroCaption" aria-live="polite">Word 1010101010101010. Click the bits to flip them.</p>
+
+      <div class="hero-actions">
+        <a class="btn primary" href="#calculate">Calculate a checksum</a>
+        <a class="btn ghost" href="#verify">Verify a checksum</a>
+      </div>
+
+      <p class="scope">
+        A learning tool for the checksum calculation. It is not a TCP/UDP packet analyzer:
+        no packets are sent or captured, and everything runs in your browser.
+      </p>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <!-- Calculator -->
+    <section id="calculate" class="block">
+      <div class="block-head">
+        <h2>Calculate a checksum</h2>
+        <p>Enter each 16-bit word using only 0 and 1. Add as many words as you need.</p>
+      </div>
+
+      <div class="workspace">
+        <div class="pane inputs">
+          <div class="textbox">
+            <label class="wlabel" for="textInput">Start from text (optional)</label>
+            <div class="wfield">
+              <input type="text" id="textInput" maxlength="64" autocomplete="off" spellcheck="false" placeholder="Type a message, e.g. Hello">
+              <button type="button" id="textBtn" class="btn ghost small">Convert</button>
+            </div>
+            <div id="textMsg" class="msg"></div>
+            <p class="hint">Each character becomes 8 bits (ASCII) and two characters make one 16-bit word. If the last word has only one character, it is padded with 00000000, as RFC 1071 says. Or skip this and type your own bits below.</p>
+            <div id="textInfo"></div>
+          </div>
+
+          <div id="wordList"></div>
+
+          <button type="button" id="addWordBtn" class="btn ghost small">+ Add word</button>
+
+          <div class="actions">
+            <button type="button" id="calcBtn" class="btn primary">Calculate checksum</button>
+            <button type="button" id="clearBtn" class="btn text">Clear</button>
+          </div>
+
+          <div id="error" class="summary-error" role="alert" style="display:none;"></div>
+        </div>
+
+        <div class="pane board" aria-live="polite">
+          <h3 class="board-title">Working</h3>
+          <div id="result">
+            <p class="empty">Enter your words and press Calculate checksum. Every step of the working appears here.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Letters to bits -->
+    <section id="letters" class="block">
+      <div class="block-head">
+        <h2>How letters become 16-bit words</h2>
+        <p>A computer stores every letter as a number. The checksum needs 16-bit words, so letters are turned into bits first.</p>
+      </div>
+
+      <div class="letters-grid">
+        <ol class="how">
+          <li><b>Find the character code.</b> Every character has a number in the ASCII table. For example H is 72 and i is 105.</li>
+          <li><b>Write the code in binary using 8 bits.</b> 72 becomes 01001000 and 105 becomes 01101001. Add zeros on the left until there are 8 bits.</li>
+          <li><b>Join two characters to make one 16-bit word.</b> The first character goes on the left, the second on the right: 01001000 01101001.</li>
+          <li><b>If one character is left over,</b> add 00000000 after it so it still makes 16 bits. RFC 1071 pads with zeros in the same way.</li>
+        </ol>
+
+        <div class="pane tryit">
+          <label class="wlabel" for="explainInput">Try it: type some letters</label>
+          <div class="wfield">
+            <input type="text" id="explainInput" maxlength="12" value="Hi!" autocomplete="off" spellcheck="false" placeholder="e.g. Hi!">
+          </div>
+          <div id="explainMsg" class="msg"></div>
+          <div class="tablewrap"><table class="convtable" id="explainTable"></table></div>
+          <button type="button" id="explainUseBtn" class="btn primary small">Use this text in the calculator</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Verify -->
+    <section id="verify" class="block">
+      <div class="block-head">
+        <h2>Verify a checksum</h2>
+        <p>Enter the words you received and the checksum that came with them. If the sum comes out as all 1s, nothing changed on the way.</p>
+      </div>
+
+      <div class="workspace">
+        <div class="pane inputs">
+          <div id="verifyWordList"></div>
+
+          <div class="inline-actions">
+            <button type="button" id="verifyAddBtn" class="btn ghost small">+ Add word</button>
+            <button type="button" id="verifyFillBtn" class="btn ghost small">Use my last calculation</button>
+          </div>
+
+          <div id="checksumField" class="checksum-field"></div>
+
+          <div class="actions">
+            <button type="button" id="verifyBtn" class="btn primary">Verify checksum</button>
+            <button type="button" id="verifyClearBtn" class="btn text">Clear</button>
+          </div>
+
+          <div id="verifyError" class="summary-error" role="alert" style="display:none;"></div>
+        </div>
+
+        <div class="pane board" aria-live="polite">
+          <h3 class="board-title">Verification</h3>
+          <div id="verifyResult">
+            <p class="empty">Press Verify checksum to see the sum and the result. Tip: use your last calculation, then change one bit and verify again.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Learn -->
+    <section id="learn" class="block">
+      <div class="block-head">
+        <h2>The ideas behind it</h2>
+        <p>Short answers, written for a first-year student.</p>
+      </div>
+
+      <div class="learn-grid">
+        <details open>
+          <summary>What is an Internet Checksum?</summary>
+          <p>A small 16-bit number worked out from the data. The sender attaches it, and the receiver repeats the sum. If the data changed on the way, the numbers will not match and the error is noticed.</p>
+        </details>
+        <details>
+          <summary>What is one's complement addition?</summary>
+          <p>Normal binary addition on 16-bit numbers with one extra rule: if the answer needs a 17th bit, that extra bit is added back into the answer.</p>
+        </details>
+        <details>
+          <summary>What is end-around carry?</summary>
+          <p>The carry that falls off the left end is brought around to the right end and added to the lowest bit. In the working panel it shows up in pink.</p>
+        </details>
+        <details>
+          <summary>What is one's complement?</summary>
+          <p>Flip every bit: 0 becomes 1 and 1 becomes 0. For example 1010 becomes 0101. It is what the bits do in the strip at the top of the page.</p>
+        </details>
+        <details>
+          <summary>Why is a checksum used?</summary>
+          <p>Noise can corrupt data while it travels. A checksum is a cheap, quick way to notice that something went wrong.</p>
+        </details>
+        <details>
+          <summary>Where is it used?</summary>
+          <p>In the headers of IPv4, TCP and UDP. RFC 1071 explains how it is computed.</p>
+        </details>
+        <details class="wide">
+          <summary>Error detection or error correction?</summary>
+          <p>Error detection only tells you that an error happened (checksum, parity, CRC). Error correction also finds and repairs the wrong bits (for example Hamming code). The Internet Checksum only detects. When it finds an error, the packet is dropped or sent again.</p>
+        </details>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <p>DCN mini project built with HTML, CSS and JavaScript. Checksum method from RFC 1071.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
