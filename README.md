@@ -2,7 +2,7 @@
 
 A small website that calculates and verifies the **Internet Checksum** (the 16-bit one's complement checksum from [RFC 1071](https://www.rfc-editor.org/rfc/rfc1071)) and shows every step of the working. Built as a Data Communication and Networking (DCN) mini project with plain HTML, CSS and JavaScript. No frameworks, no backend, no database.
 
-![Home page](screenshots/home.png)
+![Home page](screenshots/)
 
 ## What it does
 
@@ -13,8 +13,8 @@ A small website that calculates and verifies the **Internet Checksum** (the 16-b
 - Has a separate **Verify** section: if the words plus the checksum add up to `1111111111111111`, the checksum is valid
 - Checks the input and explains what is wrong (not 16 bits, not only 0 and 1)
 
-![Addition with end-around carry](screenshots/working-addition.png)
-![Final checksum](screenshots/working-checksum.png)
+![Addition with end-around carry](screenshots/)
+![Final checksum](screenshots/)
 
 ## How the checksum works
 
@@ -27,7 +27,7 @@ Example: `AAAA + CCCC + 0F0F` gives sum `8686`, so the checksum is `7979`. Addin
 
 | Valid | One bit changed |
 |---|---|
-| ![Valid](screenshots/verify-valid.png) | ![Invalid](screenshots/verify-invalid.png) |
+| ![Valid](screenshots/) | ![Invalid](screenshots/verify-invalid.png) |
 
 ## How to run it
 
