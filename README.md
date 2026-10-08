@@ -1,5 +1,7 @@
 # Internet Checksum Calculator
 
+**Live demo:** https://tanaykadakia.github.io/internet-checksum-calculator/
+
 A small website that calculates and verifies the **Internet Checksum** (the 16-bit one's complement checksum from [RFC 1071](https://www.rfc-editor.org/rfc/rfc1071)) and shows every step of the working. Built as a Data Communication and Networking (DCN) mini project with plain HTML, CSS and JavaScript. No frameworks, no backend, no database.
 
 ![Home page](home.png)
